@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Fragment } from "react"; 
 import { View, StyleSheet } from "react-native";
+import { colors } from "../styles/GameStyles";
 export default function Snake({coordinates}){
     const showSnake = () => {
         const snakeBody = []; 
@@ -8,9 +9,13 @@ export default function Snake({coordinates}){
             const x = coordinates[i].x; 
             const y = coordinates[i].y;
             if(i === 0){
-                snakeBody[i] = <View key={i} style={[Styles.main, {left: x, top: y}, {backgroundColor: 'green'}]}></View>
+                snakeBody[i] = <View 
+                key={i} 
+                style={[Styles.main, { left: x, top: y }, {backgroundColor: colors.snakeHead}]}></View>
             }else{
-                snakeBody[i] = <View key={i} style={[Styles.main, {left: x, top: y},  {backgroundColor: 'red'}]}></View>
+                snakeBody[i] = <View 
+                key={i} 
+                style={[Styles.main, { left: x, top: y },  {backgroundColor: colors.snakeBody}]}></View>
             } 
         }
         return snakeBody;

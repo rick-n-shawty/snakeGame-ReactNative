@@ -15,15 +15,14 @@ import { colors } from "..//styles/GameStyles";
 import { random } from "../Classes/funcs"; 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
-const REFRESH_RATE = 40;
-const SPEED = 4; 
+const REFRESH_RATE = 70;
+const SPACING = 15; 
 const BORDER_BOUNDS = {
     xMin: 30, 
     xMax: screenWidth - 2*(30), 
     yMin: 150, 
     yMax: screenHeight - 100
 } 
-const SNAKE_BODY = [ {x: 200, y: 200, isHead: true} ]; 
 const PRECISION = 15;
 const FOOD_ARRAY = ["🍎", "🍊", "🍌", "🍉", "🍇", "🍕", "🍔", "🥪"];
 export default function Game(){ 
@@ -45,8 +44,6 @@ export default function Game(){
     const checkGameOver = () => {
         // check if snake crossed the bounds 
         if(snake[0].x < BORDER_BOUNDS.xMin || snake[0].x > BORDER_BOUNDS.xMax || snake[0].y > BORDER_BOUNDS.yMax || snake[0].y < BORDER_BOUNDS.yMin){
-            console.log('GAME IS OVER')
-        
             setGameOver(true); 
         }
         // check if snake touched its tail 
@@ -54,7 +51,6 @@ export default function Game(){
         for(let i = 1; i < snake.length; i++){
             if(head.x === snake[i].x && head.y === snake[i].y){
                 setGameOver(true); 
-                console.log('GAME IS OVER');
                 break; 
             }
         }
@@ -79,7 +75,6 @@ export default function Game(){
             }
         }
     }
-
     const generateFood = () => {
         const foodX = random(BORDER_BOUNDS.xMin, BORDER_BOUNDS.xMax);
         const foodY = random(BORDER_BOUNDS.yMin, BORDER_BOUNDS.yMax);
@@ -89,22 +84,21 @@ export default function Game(){
 
     const moveSnake = () => {
         // checks if the game is over 
-        console.log(snake);
-        checkGameOver();
+        // checkGameOver();
         const oldHead = snake[0];
         const newHead = {...oldHead}; 
         switch(direction){
             case Direction.UP:
-                newHead.y -= SPEED; 
+                newHead.y -= SPACING; 
                 break; 
             case Direction.DOWN:
-                newHead.y += SPEED;
+                newHead.y += SPACING;
                 break; 
             case Direction.RIGHT:
-                newHead.x += SPEED; 
+                newHead.x += SPACING; 
                 break; 
             case Direction.LEFT:
-                newHead.x -= SPEED; 
+                newHead.x -= SPACING; 
                 break; 
             default: 
                 break;
@@ -112,8 +106,10 @@ export default function Game(){
         if(snake[0].x < food.x + PRECISION && snake[0].x > food.x - PRECISION && snake[0].y < food.y + PRECISION && snake[0].y > food.y - PRECISION){
             setScore(prev => prev + 10);
             generateFood(); 
+            // this adds a new element
             setSnake([newHead, ...snake])
         }else{
+            // this removes the last element of the snake 
             setSnake([newHead, ...snake.slice(0,-1)]); 
         }
 
@@ -139,16 +135,26 @@ export default function Game(){
         setIsPaused(false); 
     }
     useEffect(() => { 
-        let intervalId;
+        let moveIntervalId;
+        let gameStateIntervalId;
         if(!gameOver && !isPaused){
-            intervalId = setInterval(moveSnake, REFRESH_RATE); 
+            moveIntervalId = setInterval(moveSnake, REFRESH_RATE); 
+            gameStateIntervalId = setInterval(checkGameOver, 10); 
         }
-        return () => clearInterval(intervalId); 
+        return () => {
+            clearInterval(moveIntervalId),
+            clearInterval(gameStateIntervalId)
+        } 
     }, [direction, snake, gameOver, isPaused])
     return(
         <PanGestureHandler onGestureEvent={handleGesture}>
             <SafeAreaView style={Styles.container}>
-                <Header score={score} borderBounds={BORDER_BOUNDS} pauseGame={pauseGame} restartGame={restartGame}/>
+                <Header 
+                isPaused={isPaused} 
+                score={score} 
+                borderBounds={BORDER_BOUNDS} 
+                pauseGame={pauseGame} 
+                restartGame={restartGame}/>
                 <View style={Styles.gameCanvas}></View>
                 <Snake coordinates={snake} setGameOver={setGameOver}/>
                 <Food food={food}/>

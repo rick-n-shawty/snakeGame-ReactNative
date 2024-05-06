@@ -3,7 +3,7 @@ import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from "react-nati
 import { Feather, MaterialIcons } from "@expo/vector-icons";
 import { colors } from "../styles/GameStyles";
 const screenWidth = Dimensions.get('window').width; 
-export default function Header({pauseGame,borderBounds,restartGame, score}){
+export default function Header({pauseGame,borderBounds,restartGame, score, isPaused}){
     
     return(
         <View style={[Styles.header, {
@@ -14,7 +14,7 @@ export default function Header({pauseGame,borderBounds,restartGame, score}){
                 <MaterialIcons name="restart-alt" size={30}/>
             </TouchableOpacity>
             <TouchableOpacity onPress={pauseGame}>
-                <Feather name="pause" size={30}/>
+                <Feather name={isPaused ? 'play' : 'pause'} size={30}/>
             </TouchableOpacity> 
             <Text style={Styles.text}>{score}</Text>
         </View>
