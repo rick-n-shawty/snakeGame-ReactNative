@@ -7,8 +7,11 @@ export default function Snake({coordinates}){
         for(let i = 0; i < coordinates.length; i++){
             const x = coordinates[i].x; 
             const y = coordinates[i].y;
-            const isHead = coordinates[i]?.isHead; 
-            snakeBody[i] = <View key={i} style={[Styles.main, {left: x, top: y}, isHead && {backgroundColor: 'green'}]}></View>
+            if(i === 0){
+                snakeBody[i] = <View key={i} style={[Styles.main, {left: x, top: y}, {backgroundColor: 'green'}]}></View>
+            }else{
+                snakeBody[i] = <View key={i} style={[Styles.main, {left: x, top: y},  {backgroundColor: 'red'}]}></View>
+            } 
         }
         return snakeBody;
     }

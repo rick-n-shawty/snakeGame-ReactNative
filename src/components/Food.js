@@ -1,9 +1,11 @@
 import * as React from "react"; 
-import { View, StyleSheet } from "react-native";
-export default function Food({x,y}){
+import { View, StyleSheet, Text } from "react-native"; 
+
+export default function Food({food}){
+    const {x, y,emoji} = food; 
     return(
         <View style={[Styles.main, {left: x, top: y}]}>
-            <View style={Styles.sub}></View>
+            <Text style={Styles.sub}>{emoji}</Text>
         </View>
     )
 }
@@ -11,14 +13,10 @@ const Styles = StyleSheet.create({
     main: {
         width: 30,
         height: 30,
-        // backgroundColor: "yellow",
         position: 'absolute'
     },
     sub: {
-        width: 20,
-        height: 20,
-        backgroundColor: 'yellow',
-        borderRadius: 10,
+        fontSize: 30,
         position: 'absolute'
     }
 })
